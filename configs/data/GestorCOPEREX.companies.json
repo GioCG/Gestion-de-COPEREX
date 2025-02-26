@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "67bf533ba6ae1c396f94e40d"
+  },
+  "companyName": "medrano",
+  "email": "medrano@gmail.com",
+  "impactLevel": "high",
+  "yearsOfCareer": "5",
+  "category": "tecnology",
+  "estado": true,
+  "createdAt": {
+    "$date": "2025-02-26T17:45:31.620Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-26T17:45:31.620Z"
+  }
+}]
