@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "67bf4b5d92aba3d2b14a570f"
+  },
+  "name": "eaasa",
+  "username": "jordi",
+  "email": "admin12345@gmail.com",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$lovXoN8F9XH3ZuibmVPBVg$exk8clMnSNOR4o5xUKCNP7TOcNG41+Bz8OXxGdBRqm0",
+  "role": "ADMIN_ROLE",
+  "estado": true,
+  "createdAt": {
+    "$date": "2025-02-26T17:11:57.535Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-26T17:11:57.535Z"
+  }
+}]
