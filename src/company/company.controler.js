@@ -3,15 +3,15 @@ import Company from './company.model.js'
 export const listCompany = async (req, res) => {
     try {
         const { limite = 10, desde = 0 } = req.query;
-        const query = { estado: true }; // Usa "estado" en lugar de "status"
+        const query = { estado: true }; 
 
-        const limitValue = Math.max(1, Number(limite)); // Evita valores negativos
+        const limitValue = Math.max(1, Number(limite)); 
         const skipValue = Math.max(0, Number(desde));
 
         const [total, companies] = await Promise.all([
             Company.countDocuments(query),
             Company.find(query)
-                .sort({ companyName: 1 }) // Orden A-Z
+                .sort({ companyName: 1 }) 
                 .skip(skipValue)
                 .limit(limitValue)
         ]);
