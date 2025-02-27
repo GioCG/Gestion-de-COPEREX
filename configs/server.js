@@ -7,6 +7,8 @@ import morgan from 'morgan';
 import { dbConnection } from './mongo.js';
 import limiter from '../src/middleware/validar-cant-peticiones.js';
 import authRoutes from '../src/auth/auth.routs.js';
+import companyRoutes from '../src/company/company.routs.js';
+import reportRoutes from '../src/report/report.routs.js'
 
 const middlewares = (app) => {
     app.use(express.urlencoded({ extended: false }));
@@ -19,7 +21,8 @@ const middlewares = (app) => {
  
 const routes = (app) => {
     app.use("/GestorCOPEREXSystem/v1/auth", authRoutes);
-
+    app.use("/GestorCOPEREXSystem/v1/company", companyRoutes);
+    app.use("/GestorCOPEREXSystem/v1/report", reportRoutes);
 }
 
 const conectarDB = async () => {
