@@ -1,24 +1,37 @@
 import Company from './company.model.js'
 
-export const listCompany = async (req, res)=>{
-    const query = { status: true };
+export const listCompany = async (req, res) => {
     try {
-        
-        const total = await Company.countDocuments(query);
+        const { limite = 10, desde = 0 } = req.query;
+        const query = { estado: true }; // Usa "estado" en lugar de "status"
 
-        res.status(200).json({
+        const limitValue = Math.max(1, Number(limite)); // Evita valores negativos
+        const skipValue = Math.max(0, Number(desde));
+
+        const [total, companies] = await Promise.all([
+            Company.countDocuments(query),
+            Company.find(query)
+                .sort({ companyName: 1 }) // Orden A-Z
+                .skip(skipValue)
+                .limit(limitValue)
+        ]);
+
+        return res.status(200).json({
             success: true,
             total,
-        })
+            companies
+        });
 
-    } catch (error) {
-        res.status(500).json({
+    } catch (err) {
+        return res.status(500).json({
             success: false,
-            message: 'Error al obtener publicaciones',
-            error
-        })
+            msg: "Error al intentar mostrar las compañías",
+            error: err.message
+        });
     }
 };
+
+
 
 export const addCompany = async (req,res) => {
     try {
