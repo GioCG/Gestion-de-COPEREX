@@ -2,7 +2,7 @@ import * as XLSX from "xlsx";
 import { writeFileSync } from "fs";
 import Company from "../company/company.model.js";
 
-export async function generateExcelReport(req, res) {
+export async function generateExcelFile() {
     try {
         const companies = await Company.find().exec();
 
@@ -29,15 +29,27 @@ export async function generateExcelReport(req, res) {
         const filePath = "./reporte_empresas.xlsx";
         writeFileSync(filePath, XLSX.write(wb, { type: "buffer", bookType: "xlsx" }));
 
+        console.log(" Reporte generado con éxito");
+
+    } catch (error) {
+        console.error(" Error al generar el reporte:", error);
+    }
+}
+
+export async function generateExcelReport(req, res) {
+    try {
+        await generateExcelFile(); 
+
+        const filePath = "./reporte_empresas.xlsx";
         res.download(filePath, "reporte_empresas.xlsx", err => {
             if (err) {
-                console.error("Error al enviar el archivo:", err);
+                console.error("❌ Error al enviar el archivo:", err);
                 res.status(500).send("Error al generar el reporte.");
             }
         });
 
     } catch (error) {
-        console.error("Error al generar el reporte:", error);
+        console.error("❌ Error al generar el reporte:", error);
         res.status(500).send("Error al generar el reporte.");
     }
 }
