@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { listCompany,addCompany } from "./company.controler.js";
 import {deleteFileOnError} from "../middleware/delete-file-on-error.js"
+import {companyValidator} from "../middleware/validator.js"
 
 const router = Router();
  
@@ -11,6 +12,7 @@ router.get(
  
 router.post(
     '/',
+    companyValidator,
     deleteFileOnError,
     addCompany
 )

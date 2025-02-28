@@ -1,17 +1,30 @@
 import Company from './company.model.js'
+import { generateExcelFile } from "../report/report.controller.js";
+
 
 export const listCompany = async (req, res) => {
     try {
-        const { limite = 10, desde = 0 } = req.query;
-        const query = { estado: true }; // Usa "estado" en lugar de "status"
+        const { limite = 10, desde = 0, orderBy = "name" } = req.query;
+        
+        let query = { estado: true };
 
-        const limitValue = Math.max(1, Number(limite)); // Evita valores negativos
+        let sortOrder = {};
+        if (orderBy === "yearsOfCareer") {
+            sortOrder.yearsOfCareer = -1; 
+        } else if (orderBy === "category") {
+            sortOrder.category = 1; 
+        } else if (orderBy === "name") {
+            const direction = req.query.sortDirection === "desc" ? -1 : 1;
+            sortOrder.companyName = direction; 
+        }
+
+        const limitValue = Math.max(1, Number(limite));
         const skipValue = Math.max(0, Number(desde));
 
         const [total, companies] = await Promise.all([
             Company.countDocuments(query),
             Company.find(query)
-                .sort({ companyName: 1 }) // Orden A-Z
+                .sort(sortOrder) 
                 .skip(skipValue)
                 .limit(limitValue)
         ]);
@@ -32,8 +45,7 @@ export const listCompany = async (req, res) => {
 };
 
 
-
-export const addCompany = async (req,res) => {
+export const addCompany = async (req, res) => {
     try {
         const data = req.body;
 
@@ -43,23 +55,28 @@ export const addCompany = async (req,res) => {
             impactLevel: data.impactLevel,
             yearsOfCareer: data.yearsOfCareer,
             category: data.category
-        })
+        });
 
-        return res.status(201).json({
+        res.status(201).json({
             message: "Company registered successfully",
             companyDetails: {
                 company: company.companyName
             }
         });
 
-    } catch (error) {
-        
-        console.log(error);
+        setTimeout(() => {
+            generateExcelFile()
+                .then(() => console.log(" Reporte actualizado en segundo plano"))
+                .catch(err => console.error(" Error en la generación del reporte:", err));
+        }, 0);
 
+    } catch (error) {
+        console.error(error);
         return res.status(500).json({
             message: "Company registration failed",
             error: error.message
-        })
-
+        });
     }
-}
+};
+
+
